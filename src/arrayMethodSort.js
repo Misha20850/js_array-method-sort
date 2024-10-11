@@ -28,16 +28,33 @@ function applyCustomSort() {
       comparator = compareFunction;
     }
 
-    for (let i = 0; i < length - 1; i++) {
-      for (let j = 0; j < length - 1 - i; j++) {
-        if (comparator(this[j], this[j + 1]) > 0) {
-          const temp = this[j];
+    function quickSort(arr, left, right) {
+      if (left < right) {
+        const pivotIndex = partition(arr, left, right);
 
-          this[j] = this[j + 1];
-          this[j + 1] = temp;
-        }
+        quickSort(arr, left, pivotIndex - 1);
+
+        quickSort(arr, pivotIndex + 1, right);
       }
     }
+
+    function partition(arr, left, right) {
+      const pivot = arr[right];
+      let i = left - 1;
+
+      for (let j = left; j < right; j++) {
+        if (comparator(arr[j], pivot) <= 0) {
+          i++;
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+      }
+
+      [arr[i + 1], arr[right]] = [arr[right], arr[i + 1]];
+
+      return i + 1;
+    }
+
+    quickSort(this, 0, length - 1);
 
     return this;
   };
